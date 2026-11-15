@@ -2,7 +2,12 @@ import { buildPushPayload } from '@block65/webcrypto-web-push';
 
 // This Worker stores only per-device push subscriptions, no names or email addresses.
 // Every device uses a random local id plus a separate random bearer token.
-const daySwiss=(date=new Date())=>new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Zurich',year:'numeric',month:'2-digit',day:'2-digit'}).format(date);
+const daySwiss=(date=new Date())=>{
+  const parts=Object.fromEntries(new Intl.DateTimeFormat('en-GB',{
+    timeZone:'Europe/Zurich',year:'numeric',month:'2-digit',day:'2-digit'
+  }).formatToParts(date).filter(p=>p.type!=='literal').map(p=>[p.type,p.value]));
+  return parts.year+'-'+parts.month+'-'+parts.day;
+};
 const swissHourMinute=()=>new Intl.DateTimeFormat('en-GB',{timeZone:'Europe/Zurich',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).format(new Date());
 const toDayNumber=s=>Math.floor(Date.parse(s+'T00:00:00Z')/86400000);
 const numberDue=(from,to)=>Math.max(0,toDayNumber(to)-toDayNumber(from));
