@@ -14,12 +14,12 @@ Die Web-App läuft auf GitHub Pages; die Push-API und der Zeitplan laufen auf Cl
 1. Kostenloses Cloudflare-Konto unter https://dash.cloudflare.com/ anlegen.
 2. Auf einem Computer Node.js installieren und dieses Repository herunterladen.
 3. Im Unterordner push ausführen: `npm install` und `npx wrangler login`.
-4. Erzeuge ein VAPID-P-256-Schlüsselpaar mit einem geeigneten Web-Push-Generator. Trage den öffentlichen Key in `wrangler.jsonc` unter `VAPID_PUBLIC_KEY` ein. Den privaten Key **niemals in GitHub speichern**: `npx wrangler secret put VAPID_PRIVATE_KEY`.
+4. Erzeuge das VAPID-P-256-Schlüsselpaar lokal mit `node generate-keys.mjs`. Trage den **öffentlichen** Key in `wrangler.jsonc` bei `VAPID_PUBLIC_KEY` ein. Den privaten Key niemals in GitHub speichern.
 5. In `wrangler.jsonc` `VAPID_SUBJECT` auf `mailto:deine-adresse@example.com` ändern.
 6. Datenbank erzeugen: `npx wrangler d1 create matura-push`. Die zurückgegebene `database_id` in `wrangler.jsonc` eintragen.
 7. Tabellen anlegen: `npx wrangler d1 execute matura-push --remote --file=./schema.sql`.
-8. Worker veröffentlichen: `npx wrangler deploy`.
-9. In der Datei `push-config.js` im Repository `apiBase` auf die echte Worker-Adresse (https://...workers.dev) setzen. Der öffentliche VAPID-Key wird beim Registrieren vom Worker abgerufen; `vapidPublicKey` in dieser Datei ist optional.
+8. Worker veröffentlichen: `npx wrangler deploy`. Danach den privaten Schlüssel als Secret hinterlegen: `npx wrangler secret put VAPID_PRIVATE_KEY` und den generierten privaten Schlüssel einfügen. Der Worker muss die öffentlichen und privaten Schlüssel aus demselben Schlüsselpaar verwenden.
+9. In der Datei `push-config.js` im Repository `apiBase` auf die echte Worker-Adresse (https://...workers.dev) setzen. Der öffentliche VAPID-Key wird beim Registrieren vom Worker abgerufen.
 10. GitHub Pages für Branch main, root aktivieren. App auf dem iPhone öffnen, «Zum Home-Bildschirm» wählen und danach über das neue Icon «Push-Erinnerungen aktivieren» anklicken.
 
 ## Hinweise
