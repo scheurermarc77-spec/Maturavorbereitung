@@ -1,7 +1,6 @@
-// Nach dem Bereitstellen des Cloudflare Workers hier die zwei Werte eintragen.
-// Beispiel: apiBase: "https://matura-push.DEIN-NAME.workers.dev"
-// Den VAPID_PUBLIC_KEY generierst du mit den Anweisungen in push/README.md.
+// Cloudflare Push-API for the French Matura app.
+// The VAPID public key is fetched from the Worker during registration.
 window.MATURA_PUSH_CONFIG = {
-  apiBase: "",
+  apiBase: "https://matura-push.marcscheurer.workers.dev",
   vapidPublicKey: ""
 };
