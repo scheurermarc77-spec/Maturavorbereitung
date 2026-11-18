@@ -23,7 +23,7 @@ function maturaUpdateText(message){
 }
 async function maturaSetBadge(count){
  try{
-  if(Number(count)>0&&typeof navigator.setAppBadge==='function')await navigator.setAppBadge(1);
+  if(Number(count)>0&&typeof navigator.setAppBadge==='function')await navigator.setAppBadge(Number(count));
   else if(Number(count)===0&&typeof navigator.clearAppBadge==='function')await navigator.clearAppBadge();
  }catch{}
 }
@@ -56,7 +56,7 @@ async function maturaRegister(askPermission){
  await maturaSetBadge(result.badge);
  const status=await maturaPost('status');
  await maturaSetBadge(status.badge);
- maturaUpdateText(status.badge?'Heute wartet dein Satz auf dich (1).':'Push-Erinnerungen aktiviert. Keine offene Tagesübung.');
+ maturaUpdateText(status.badge?status.badge+' offene '+(status.badge===1?'Tagesübung.':'Tagesübungen.'):'Push-Erinnerungen aktiviert. Keine offene Tagesübung.');
  const button=document.getElementById('matura-push-enable');
  if(button)button.textContent='Push-Erinnerungen aktualisieren';
 }
@@ -80,7 +80,7 @@ check=function(practice){
 };
 const maturaPushPanel=document.getElementById('matura-push-panel');
 if(maturaPushPanel){
- maturaPushPanel.innerHTML='<h2>Erinnerung auf dem iPhone</h2><p class="muted">Wenn der Satz des Tages noch offen ist, erscheint um 00:01 Uhr eine rote 1 auf dem App-Icon und eine Mitteilung. Nach der Korrektur wird die 1 zurückgesetzt.</p><p id="matura-push-state" class="muted">Einmalig Push-Erinnerungen aktivieren (iPhone: über Home-Bildschirm öffnen).</p><button id="matura-push-enable" class="btn alt" type="button">Push-Erinnerungen aktivieren</button>';
+ maturaPushPanel.innerHTML='<h2>Erinnerung auf dem iPhone</h2><p class="muted">Um 00:01 Uhr erscheint für jeden offenen Tag eine höhere rote Zahl auf dem App-Icon und eine Mitteilung. Am ersten Tag ist es eine 1. Nach der Korrektur wird die Zahl zurückgesetzt.</p><p id="matura-push-state" class="muted">Einmalig Push-Erinnerungen aktivieren (iPhone: über Home-Bildschirm öffnen).</p><button id="matura-push-enable" class="btn alt" type="button">Push-Erinnerungen aktivieren</button>';
  document.getElementById('matura-push-enable').addEventListener('click',maturaEnablePush);
 }
 if('serviceWorker' in navigator){
