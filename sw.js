@@ -6,10 +6,10 @@ self.addEventListener('push',event=>{
   let data={};try{data=event.data?event.data.json():{}}catch{}
   const badge=Math.max(0,Number(data.badge)||0);
   if(self.navigator&&typeof self.navigator.setAppBadge==='function'){
-   try{if(badge)await self.navigator.setAppBadge(badge);else await self.navigator.clearAppBadge()}catch{}
+   try{if(badge)await self.navigator.setAppBadge(1);else await self.navigator.clearAppBadge()}catch{}
   }
   await self.registration.showNotification('Français Matura',{
-   body:badge===1?'Ein französischer Satz wartet auf dich.':badge+' Tage warten auf dein Französischtraining.',
+   body:'Dein französischer Satz des Tages wartet auf dich.',
    icon:'./icon.svg',tag:'francais-matura-daily',renotify:false,
    data:{url:self.registration.scope}
   });
