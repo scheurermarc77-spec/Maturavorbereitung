@@ -114,7 +114,7 @@ function maturaNudgeStatus(text){
 
 const maturaPushPanel=document.getElementById('matura-push-panel');
 if(maturaPushPanel){
- maturaPushPanel.innerHTML='<h2>Erinnerung auf dem iPhone</h2><p class="muted">Wenn du den Satz des Tages noch nicht bearbeitet hast, erscheint um 19.00 Uhr Schweizer Zeit eine rote 1 auf dem App-Icon und eine Mitteilung. Nach der Korrektur wird die 1 zurückgesetzt.</p><p id="matura-push-state" class="muted">Einmalig Push-Erinnerungen aktivieren (iPhone: über Home-Bildschirm öffnen).</p><button id="matura-push-enable" class="btn alt" type="button">Push-Erinnerungen aktivieren</button>';
+ maturaPushPanel.innerHTML='<h2>Erinnerung auf dem iPhone</h2><p class="muted">Wenn du den Satz des Tages noch nicht bearbeitet hast, erscheint um 16.00 Uhr Schweizer Zeit eine rote 1 auf dem App-Icon und eine Mitteilung. Nach der Korrektur wird die 1 zurückgesetzt.</p><p id="matura-push-state" class="muted">Einmalig Push-Erinnerungen aktivieren (iPhone: über Home-Bildschirm öffnen).</p><button id="matura-push-enable" class="btn alt" type="button">Push-Erinnerungen aktivieren</button>';
  document.getElementById('matura-push-enable').addEventListener('click',maturaEnablePush);
  const nudge=document.createElement('div');
  nudge.innerHTML='<div class="eyebrow" style="margin-top:25px">Gemeinsam lernen</div><p class="muted">Erinnere andere Lernende, bei denen die rote 1 auf dem App-Icon noch offen ist. Personen ohne offene 1 erhalten nichts. Maximal einmal pro Tag pro Person.</p><button id="matura-nudge-btn" class="btn alt" type="button">Andere ans Lernen erinnern</button><p id="matura-nudge-status" class="muted"></p>';
