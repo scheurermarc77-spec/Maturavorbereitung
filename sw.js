@@ -9,7 +9,7 @@ self.addEventListener('push',event=>{
    try{if(badge)await self.navigator.setAppBadge(1);else await self.navigator.clearAppBadge()}catch{}
   }
   await self.registration.showNotification('Français Matura',{
-   body:'Dein französischer Satz des Tages wartet auf dich.',
+   body:String(data.body||'Dein französischer Satz des Tages wartet auf dich.').slice(0,160),
    icon:'./icon.svg',tag:'francais-matura-daily',renotify:false,
    data:{url:self.registration.scope}
   });
