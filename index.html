@@ -78,10 +78,48 @@ check=function(practice){
   maturaUpdateText('Tagesübung erledigt. Icon-Zähler zurückgesetzt.');
  }
 };
+
+async function maturaNudgeOthers(){
+ const btn=document.getElementById('matura-nudge-btn');
+ if(!btn)return;
+ if(!maturaSupported()||Notification.permission!=='granted'){
+  maturaNudgeStatus('Aktiviere zuerst die Push-Erinnerungen auf deinem iPhone.');
+  return;
+ }
+ if(!confirm('Möchtest du anderen Lernenden mit einer offenen roten 1 eine Erinnerung schicken?'))return;
+ btn.disabled=true;
+ try{
+  const outcome=await maturaPost('nudge');
+  maturaNudgeStatus(outcome.sent>0
+    ?'Erinnerung an '+outcome.sent+' '+(outcome.sent===1?'Gerät':'Geräte')+' versendet.'
+    :'Momentan gibt es keine anderen Geräte mit einer offenen roten 1.');
+  if(outcome.failed)maturaNudgeStatus('Erinnerung an '+outcome.sent+' Geräte versendet; '+outcome.failed+' Zustellungen fehlgeschlagen.');
+  btn.textContent='Für heute bereits erinnert';
+ }catch(error){
+  if(error.message.includes('429')){
+   maturaNudgeStatus('Du hast heute bereits eine Erinnerung ausgelöst. Morgen ist dies wieder möglich.');
+   btn.textContent='Für heute bereits erinnert';
+  }else if(error.message.includes('404')||error.message.includes('403')){
+   maturaNudgeStatus('Bitte aktiviere deine Push-Erinnerungen nochmals und versuche es erneut.');
+  }else{
+   console.warn('Matura Erinnerung:',error);
+   maturaNudgeStatus('Die Erinnerung konnte nicht verschickt werden. Versuche es später erneut.');
+  }
+ }finally{btn.disabled=false}
+}
+function maturaNudgeStatus(text){
+ const el=document.getElementById('matura-nudge-status');
+ if(el)el.textContent=text;
+}
+
 const maturaPushPanel=document.getElementById('matura-push-panel');
 if(maturaPushPanel){
  maturaPushPanel.innerHTML='<h2>Erinnerung auf dem iPhone</h2><p class="muted">Wenn du den Satz des Tages noch nicht bearbeitet hast, erscheint um 19.00 Uhr Schweizer Zeit eine rote 1 auf dem App-Icon und eine Mitteilung. Nach der Korrektur wird die 1 zurückgesetzt.</p><p id="matura-push-state" class="muted">Einmalig Push-Erinnerungen aktivieren (iPhone: über Home-Bildschirm öffnen).</p><button id="matura-push-enable" class="btn alt" type="button">Push-Erinnerungen aktivieren</button>';
  document.getElementById('matura-push-enable').addEventListener('click',maturaEnablePush);
+ const nudge=document.createElement('div');
+ nudge.innerHTML='<div class="eyebrow" style="margin-top:25px">Gemeinsam lernen</div><p class="muted">Erinnere andere Lernende, bei denen die rote 1 auf dem App-Icon noch offen ist. Personen ohne offene 1 erhalten nichts. Maximal einmal pro Tag pro Person.</p><button id="matura-nudge-btn" class="btn alt" type="button">Andere ans Lernen erinnern</button><p id="matura-nudge-status" class="muted"></p>';
+ maturaPushPanel.appendChild(nudge);
+ document.getElementById('matura-nudge-btn').addEventListener('click',maturaNudgeOthers);
 }
 if('serviceWorker' in navigator){
  navigator.serviceWorker.register('./sw.js',{scope:'./'}).catch(console.warn);
